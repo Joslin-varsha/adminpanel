@@ -5,6 +5,22 @@ import Link from 'next/link';
 import Sidebar from '../../../components/Sidebar';
 
 export default function DashboardPage() {
+  const [unassignedCount, setUnassignedCount] = React.useState(12);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('housework_bookings');
+      if (saved) {
+        try {
+          const list = JSON.parse(saved);
+          const count = list.filter(b => b.worker === 'Unassigned').length;
+          setUnassignedCount(count);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  }, []);
 
   const stats = [
     { label: 'Total Jobs', value: '1,248', trend: '+12%', color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
@@ -128,19 +144,21 @@ export default function DashboardPage() {
 
                   <ul className="space-y-3">
                     {[
-                      { text: 'Unassigned Jobs', count: 12, color: 'text-amber-600', bg: 'bg-amber-100 dark:bg-amber-900/30' },
-                      { text: 'Failed Payments', count: 4, color: 'text-rose-600', bg: 'bg-rose-100 dark:bg-rose-900/30' },
-                      { text: 'Worker Abuse', count: 1, color: 'text-indigo-600', bg: 'bg-indigo-100 dark:bg-indigo-900/30' },
+                      { text: 'Unassigned Jobs', count: unassignedCount, color: 'text-amber-600', bg: 'bg-amber-100 dark:bg-amber-900/30', href: '/screen/bookings?filter=unassigned' },
+                      { text: 'Failed Payments', count: 4, color: 'text-rose-600', bg: 'bg-rose-100 dark:bg-rose-900/30', href: '/screen/payments' },
+                      { text: 'Worker Abuse', count: 1, color: 'text-indigo-600', bg: 'bg-indigo-100 dark:bg-indigo-900/30', href: '#' },
                     ].map((alert, i) => (
-                      <li key={i} className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-800 cursor-pointer group">
-                        <div className="flex items-center">
-                          <div className={`w-1.5 h-1.5 rounded-full mr-2 ${alert.bg.split(' ')[0].replace('100', '500')}`}></div>
-                          <span className="text-xs font-medium text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{alert.text}</span>
-                        </div>
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${alert.bg} ${alert.color}`}>
-                          {alert.count}
-                        </span>
-                      </li>
+                      <Link href={alert.href} key={i} className="block w-full">
+                        <li className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-800 cursor-pointer group">
+                          <div className="flex items-center">
+                            <div className={`w-1.5 h-1.5 rounded-full mr-2 ${alert.bg.split(' ')[0].replace('100', '500')}`}></div>
+                            <span className="text-xs font-medium text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{alert.text}</span>
+                          </div>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${alert.bg} ${alert.color} ${alert.text === 'Unassigned Jobs' && alert.count > 0 ? 'animate-pulse' : ''}`}>
+                            {alert.count}
+                          </span>
+                        </li>
+                      </Link>
                     ))}
                   </ul>
                   

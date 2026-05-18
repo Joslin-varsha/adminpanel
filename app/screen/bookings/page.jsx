@@ -5,29 +5,62 @@ import Sidebar from '../../../components/Sidebar';
 import Link from 'next/link';
 
 export default function BookingsPage() {
-  // Dummy Data
-  const allBookings = [
-    { id: 'BK-001', customer: 'Sarah Johnson', worker: 'Ravi Kumar', date: '2026-05-15', time: '09:00 AM', service: 'Deep Cleaning, Sanitization', distance: '12 km', status: 'Pending', payment: 'Unpaid' },
+  // Default Dummy Data with exactly 12 Unassigned bookings to match dashboard alert
+  const initialBookings = [
+    { id: 'BK-001', customer: 'Sarah Johnson', worker: 'Unassigned', date: '2026-05-15', time: '09:00 AM', service: 'Deep Cleaning, Sanitization', distance: '12 km', status: 'Pending', payment: 'Unpaid' },
     { id: 'BK-002', customer: 'Michael Chen', worker: 'Asha Verma', date: '2026-05-15', time: '10:30 AM', service: 'Plumbing', distance: '18 km', status: 'Accepted', payment: 'Paid' },
     { id: 'BK-003', customer: 'Emma Williams', worker: 'John Peter', date: '2026-05-16', time: '02:15 PM', service: 'Painting, Wall Prep', distance: '8 km', status: 'In Progress', payment: 'Paid' },
     { id: 'BK-004', customer: 'James Brown', worker: 'Vikram Singh', date: '2026-05-16', time: '11:00 AM', service: 'Handyman', distance: '22 km', status: 'Completed', payment: 'Paid' },
-    { id: 'BK-005', customer: 'Olivia Davis', worker: 'Priya Nair', date: '2026-05-17', time: '08:45 AM', service: 'Laundry, Folding', distance: '14 km', status: 'Cancelled', payment: 'Pending' },
+    { id: 'BK-005', customer: 'Olivia Davis', worker: 'Unassigned', date: '2026-05-17', time: '08:45 AM', service: 'Laundry, Folding', distance: '14 km', status: 'Pending', payment: 'Pending' },
     { id: 'BK-006', customer: 'Sophia Martinez', worker: 'Amit Sharma', date: '2026-05-17', time: '03:30 PM', service: 'Electrical', distance: '7 km', status: 'Completed', payment: 'Paid' },
     { id: 'BK-007', customer: 'Liam Anderson', worker: 'Meera Reddy', date: '2026-05-18', time: '01:00 PM', service: 'Carpentry', distance: '19 km', status: 'Accepted', payment: 'Pending' },
     { id: 'BK-008', customer: 'Isabella Taylor', worker: 'Suresh Patel', date: '2026-05-18', time: '10:00 AM', service: 'Pest Control', distance: '11 km', status: 'In Progress', payment: 'Paid' },
-    { id: 'BK-009', customer: 'Noah Wilson', worker: 'Kavita Das', date: '2026-05-19', time: '09:15 AM', service: 'AC Repair, Gas Fill', distance: '25 km', status: 'Pending', payment: 'Unpaid' },
+    { id: 'BK-009', customer: 'Noah Wilson', worker: 'Unassigned', date: '2026-05-19', time: '09:15 AM', service: 'AC Repair, Gas Fill', distance: '25 km', status: 'Pending', payment: 'Unpaid' },
     { id: 'BK-010', customer: 'Ava Thomas', worker: 'Rajesh Iyer', date: '2026-05-19', time: '11:45 AM', service: 'Gardening', distance: '6 km', status: 'Completed', payment: 'Paid' },
-    { id: 'BK-011', customer: 'Oliver White', worker: 'Ravi Kumar', date: '2026-05-20', time: '08:00 AM', service: 'Deep Cleaning', distance: '5 km', status: 'Pending', payment: 'Unpaid' },
+    { id: 'BK-011', customer: 'Oliver White', worker: 'Unassigned', date: '2026-05-20', time: '08:00 AM', service: 'Deep Cleaning', distance: '5 km', status: 'Pending', payment: 'Unpaid' },
     { id: 'BK-012', customer: 'Charlotte Harris', worker: 'Asha Verma', date: '2026-05-20', time: '02:00 PM', service: 'Plumbing', distance: '9 km', status: 'Completed', payment: 'Paid' },
+    
+    // 8 more unassigned bookings to total exactly 12 unassigned jobs!
+    { id: 'BK-013', customer: 'Lucas Martin', worker: 'Unassigned', date: '2026-05-21', time: '10:00 AM', service: 'Electrical', distance: '12 km', status: 'Pending', payment: 'Unpaid' },
+    { id: 'BK-014', customer: 'Mia Thompson', worker: 'Unassigned', date: '2026-05-21', time: '11:30 AM', service: 'Carpentry', distance: '15 km', status: 'Pending', payment: 'Unpaid' },
+    { id: 'BK-015', customer: 'Ethan Garcia', worker: 'Unassigned', date: '2026-05-22', time: '01:15 PM', service: 'Deep Cleaning', distance: '10 km', status: 'Pending', payment: 'Unpaid' },
+    { id: 'BK-016', customer: 'Amelia Martinez', worker: 'Unassigned', date: '2026-05-22', time: '03:45 PM', service: 'Pest Control', distance: '17 km', status: 'Pending', payment: 'Paid' },
+    { id: 'BK-017', customer: 'Benjamin Robinson', worker: 'Unassigned', date: '2026-05-23', time: '09:00 AM', service: 'AC Repair', distance: '20 km', status: 'Pending', payment: 'Unpaid' },
+    { id: 'BK-018', customer: 'Harper Clark', worker: 'Unassigned', date: '2026-05-23', time: '10:45 AM', service: 'Gardening', distance: '8 km', status: 'Pending', payment: 'Paid' },
+    { id: 'BK-019', customer: 'Alexander Rodriguez', worker: 'Unassigned', date: '2026-05-24', time: '02:30 PM', service: 'Plumbing', distance: '14 km', status: 'Pending', payment: 'Unpaid' },
+    { id: 'BK-020', customer: 'Evelyn Lewis', worker: 'Unassigned', date: '2026-05-24', time: '04:15 PM', service: 'Laundry', distance: '11 km', status: 'Pending', payment: 'Unpaid' },
   ];
 
-  // Pagination State
-    // State
-   const [searchTerm, setSearchTerm] = useState('');
-   const [workerFilter, setWorkerFilter] = useState('');
-   const [currentPage, setCurrentPage] = useState(1);
-   const [openDropdownId, setOpenDropdownId] = useState(null);
-   const itemsPerPage = 10;
+  // State
+  const [bookingsList, setBookingsList] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('housework_bookings');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          // Self-healing database: If the browser's stored list is from the old code 
+          // (does not contain any Unassigned workers, or is the old length of 12),
+          // we force-upgrade it to our new 20-item database with 12 unassigned jobs.
+          const hasUnassigned = parsed.some(b => b.worker === 'Unassigned');
+          if (!hasUnassigned || parsed.length !== 20) {
+            localStorage.setItem('housework_bookings', JSON.stringify(initialBookings));
+            return initialBookings;
+          }
+          return parsed;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+    return initialBookings;
+  });
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [workerFilter, setWorkerFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+  const itemsPerPage = 10;
 
   // Handle click outside to close dropdown
   React.useEffect(() => {
@@ -36,8 +69,31 @@ export default function BookingsPage() {
     return () => window.removeEventListener('click', handleClickOutside);
   }, []);
 
+  // Listen to URL filter param (e.g. ?filter=unassigned)
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const filter = params.get('filter');
+      if (filter === 'unassigned') {
+        setStatusFilter('Unassigned');
+        setCurrentPage(1);
+      }
+    }
+  }, []);
+
+  // Function to assign worker to an unassigned booking
+  const assignWorker = (bookingId, workerName) => {
+    const updated = bookingsList.map(b => 
+      b.id === bookingId ? { ...b, worker: workerName, status: b.status === 'Pending' ? 'Accepted' : b.status } : b
+    );
+    setBookingsList(updated);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('housework_bookings', JSON.stringify(updated));
+    }
+  };
+
   // Filter Logic
-  const filteredBookings = allBookings.filter(booking => {
+  const filteredBookings = bookingsList.filter(booking => {
     const matchesSearch = booking.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           booking.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           booking.worker.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -45,7 +101,14 @@ export default function BookingsPage() {
     
     const matchesWorker = workerFilter === '' || booking.worker === workerFilter;
 
-    return matchesSearch && matchesWorker;
+    let matchesStatus = true;
+    if (statusFilter === 'Unassigned') {
+      matchesStatus = booking.worker === 'Unassigned';
+    } else if (statusFilter !== 'All') {
+      matchesStatus = booking.status === statusFilter;
+    }
+
+    return matchesSearch && matchesWorker && matchesStatus;
   });
 
   // Calculate Pagination
@@ -87,15 +150,15 @@ export default function BookingsPage() {
         <div className="p-6 mx-auto">
 
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-serif mb-8">
+          <div className="mb-6">
+            <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight font-serif mb-6">
               Booking Management
             </h1>
 
             {/* Controls */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
               
-              {/* Left Side: Search and Assign */}
+              {/* Left Side: Search and Filters */}
               <div className="flex flex-wrap items-center gap-4 flex-1">
                 <div className="w-full sm:w-64">
                   <input
@@ -112,12 +175,42 @@ export default function BookingsPage() {
                     onChange={(e) => { setWorkerFilter(e.target.value); setCurrentPage(1); }}
                     className="appearance-none w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md shadow-sm pl-4 pr-10 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                   >
-                    <option value="" className="text-slate-500">Assign Worker</option>
-                    <option value="Ravi Kumar" className="text-slate-900 dark:text-slate-100">Ravi Kumar</option>
-                    <option value="Asha Verma" className="text-slate-900 dark:text-slate-100">Asha Verma</option>
+                    <option value="" className="text-slate-500">Filter by Worker</option>
+                    <option value="Unassigned">Unassigned Only</option>
+                    <option value="Ravi Kumar">Ravi Kumar</option>
+                    <option value="Asha Verma">Asha Verma</option>
+                    <option value="John Peter">John Peter</option>
+                    <option value="Vikram Singh">Vikram Singh</option>
+                    <option value="Priya Nair">Priya Nair</option>
+                    <option value="Amit Sharma">Amit Sharma</option>
+                    <option value="Meera Reddy">Meera Reddy</option>
+                    <option value="Suresh Patel">Suresh Patel</option>
+                    <option value="Kavita Das">Kavita Das</option>
+                    <option value="Rajesh Iyer">Rajesh Iyer</option>
                   </select>
                   <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                    <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="w-full sm:w-48 relative">
+                  <select 
+                    value={statusFilter}
+                    onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
+                    className="appearance-none w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md shadow-sm pl-4 pr-10 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                  >
+                    <option value="All">All Statuses</option>
+                    <option value="Unassigned">Unassigned Only</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Accepted">Accepted</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                    <svg className="w-4 h-4 text-slate-500 dark:text-slate-400" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -206,7 +299,37 @@ export default function BookingsPage() {
                       <td className="px-4 py-4 text-slate-400 text-center">{indexOfFirstItem + index + 1}</td>
                       <td className="px-4 py-4 font-medium text-slate-700 dark:text-slate-300">{booking.id}</td>
                       <td className="px-4 py-4 text-slate-600 dark:text-slate-400">{booking.customer}</td>
-                      <td className="px-4 py-4 text-slate-600 dark:text-slate-400">{booking.worker}</td>
+                      <td className="px-4 py-4">
+                        {booking.worker === 'Unassigned' ? (
+                          <div className="relative inline-block" onClick={(e) => e.stopPropagation()}>
+                            <select
+                              onChange={(e) => {
+                                if (e.target.value !== '') {
+                                  assignWorker(booking.id, e.target.value);
+                                }
+                              }}
+                              className="px-2.5 py-1 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700/50 rounded-lg text-xs font-semibold text-amber-700 dark:text-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-500 cursor-pointer animate-pulse"
+                              defaultValue=""
+                            >
+                              <option value="" disabled>⚠️ Assign Worker</option>
+                              <option value="Ravi Kumar">Ravi Kumar</option>
+                              <option value="Asha Verma">Asha Verma</option>
+                              <option value="John Peter">John Peter</option>
+                              <option value="Vikram Singh">Vikram Singh</option>
+                              <option value="Priya Nair">Priya Nair</option>
+                              <option value="Amit Sharma">Amit Sharma</option>
+                              <option value="Meera Reddy">Meera Reddy</option>
+                              <option value="Suresh Patel">Suresh Patel</option>
+                              <option value="Kavita Das">Kavita Das</option>
+                              <option value="Rajesh Iyer">Rajesh Iyer</option>
+                            </select>
+                          </div>
+                        ) : (
+                          <span className="text-slate-700 dark:text-slate-300 font-medium bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
+                            {booking.worker}
+                          </span>
+                        )}
+                      </td>
                       <td className="px-4 py-4 text-slate-600 dark:text-slate-400">{booking.date}</td>
                       <td className="px-4 py-4 text-slate-600 dark:text-slate-400">{booking.time}</td>
                       {/* <td className="px-4 py-4">
