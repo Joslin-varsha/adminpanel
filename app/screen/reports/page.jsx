@@ -47,11 +47,11 @@ export default function ReportsPage() {
   }));
 
   const workersOnDay = [
-    { id: 'W-101', name: 'Michael Schmidt', jobs: 4, revenue: '€120', status: 'Online' },
-    { id: 'W-102', name: 'Sarah Wagner', jobs: 3, revenue: '€95', status: 'Offline' },
-    { id: 'W-103', name: 'Thomas Müller', jobs: 5, revenue: '€150', status: 'Online' },
-    { id: 'W-104', name: 'Elena Fischer', jobs: 2, revenue: '€60', status: 'Online' },
-    { id: 'W-105', name: 'Andreas Koch', jobs: 4, revenue: '€130', status: 'Online' },
+    { id: 'WRK-001', name: 'Ravi Kumar', jobs: 4, revenue: '€120', status: 'Online' },
+    { id: 'WRK-002', name: 'Asha Verma', jobs: 3, revenue: '€95', status: 'Offline' },
+    { id: 'WRK-003', name: 'Priya Sharma', jobs: 5, revenue: '€150', status: 'Online' },
+    { id: 'WRK-004', name: 'Amit Patel', jobs: 2, revenue: '€60', status: 'Online' },
+    { id: 'WRK-005', name: 'Deepa Singh', jobs: 4, revenue: '€130', status: 'Online' },
   ];
 
   // Reusable Chart Component (Untouched as requested)
@@ -235,7 +235,7 @@ export default function ReportsPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-sm">
                     <thead><tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400"><th className="py-4 px-6">Worker Name</th><th className="py-4 px-6 text-center">Jobs</th><th className="py-4 px-6 text-center">Revenue</th><th className="py-4 px-6 text-center">Action</th></tr></thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">{workersOnDay.map((worker) => (<tr key={worker.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"><td className="py-4 px-6 font-bold text-slate-700 dark:text-slate-200">{worker.name}</td><td className="py-4 px-6 text-center font-black text-blue-600">{worker.jobs}</td><td className="py-4 px-6 text-center font-bold text-slate-900 dark:text-white">{worker.revenue}</td><td className="py-4 px-6 text-center"><Link href="/screen/workers/profile" className="px-4 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 shadow-sm transition-all inline-block">Profile</Link></td></tr>))}</tbody>
+                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">{workersOnDay.map((worker) => (<tr key={worker.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"><td className="py-4 px-6 font-bold text-slate-700 dark:text-slate-200">{worker.name}</td><td className="py-4 px-6 text-center font-black text-blue-600">{worker.jobs}</td><td className="py-4 px-6 text-center font-bold text-slate-900 dark:text-white">{worker.revenue}</td><td className="py-4 px-6 text-center"><Link href={`/screen/workers/profile?id=${worker.id}`} className="px-4 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 shadow-sm transition-all inline-block">Profile</Link></td></tr>))}</tbody>
                   </table>
                 </div>
               </div>

@@ -1,11 +1,28 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../../../../components/Sidebar';
 import Link from 'next/link';
 
+const allWorkers = [
+  { id: 'WRK-001', name: 'Ravi Kumar', phone: '+49 151234567', skill: 'Cleaning', rating: '4.8', acceptance: '95%', rejects: 2, status: 'Online' },
+  { id: 'WRK-002', name: 'Asha Verma', phone: '+49 161245678', skill: 'Plumbing', rating: '4.6', acceptance: '91%', rejects: 1, status: 'Offline' },
+  { id: 'WRK-003', name: 'Priya Sharma', phone: '+49 171356789', skill: 'Electrical', rating: '4.9', acceptance: '97%', rejects: 0, status: 'Online' },
+  { id: 'WRK-004', name: 'Amit Patel', phone: '+49 151987654', skill: 'Carpentry', rating: '4.7', acceptance: '93%', rejects: 2, status: 'Online' },
+  { id: 'WRK-005', name: 'Deepa Singh', phone: '+49 162345678', skill: 'Painting', rating: '4.5', acceptance: '89%', rejects: 3, status: 'Offline' },
+  { id: 'WRK-006', name: 'Rajesh Gupta', phone: '+49 171456789', skill: 'HVAC', rating: '4.8', acceptance: '96%', rejects: 1, status: 'Online' },
+  { id: 'WRK-007', name: 'Meera Reddy', phone: '+49 151678901', skill: 'Landscaping', rating: '4.6', acceptance: '92%', rejects: 2, status: 'Online' },
+  { id: 'WRK-008', name: 'Vikram Nair', phone: '+49 162567890', skill: 'General Maintenance', rating: '4.4', acceptance: '87%', rejects: 4, status: 'Offline' },
+  { id: 'WRK-009', name: 'Sunita Desai', phone: '+49 171789012', skill: 'Cleaning', rating: '5.0', acceptance: '98%', rejects: 0, status: 'Online' },
+  { id: 'WRK-010', name: 'Karan Mehta', phone: '+49 151890123', skill: 'Plumbing', rating: '4.3', acceptance: '86%', rejects: 5, status: 'Online' },
+  { id: 'WRK-011', name: 'Anjali Iyer', phone: '+49 162901234', skill: 'Electrical', rating: '4.7', acceptance: '94%', rejects: 1, status: 'Online' },
+  { id: 'WRK-012', name: 'Sanjay Joshi', phone: '+49 171012345', skill: 'Carpentry', rating: '4.2', acceptance: '85%', rejects: 3, status: 'Offline' },
+  { id: 'WRK-013', name: 'Lakshmi Rao', phone: '+49 151123456', skill: 'Painting', rating: '4.9', acceptance: '96%', rejects: 1, status: 'Online' },
+  { id: 'WRK-014', name: 'Arjun Bose', phone: '+49 162234567', skill: 'HVAC', rating: '4.6', acceptance: '90%', rejects: 2, status: 'Offline' },
+];
+
 export default function WorkerProfilePage() {
-  const workerData = {
+  const [workerData, setWorkerData] = useState({
     id: 'W-105',
     name: 'Michael Schmidt',
     status: 'Online',
@@ -18,7 +35,29 @@ export default function WorkerProfilePage() {
     email: 'm.schmidt@housework.com',
     phone: '+49 152 334 4556',
     address: 'Kurfürstendamm 21, Berlin, Germany'
-  };
+  });
+
+  useEffect(() => {
+    // Read the query parameter from the URL safely on the client
+    const searchParams = new URLSearchParams(window.location.search);
+    const workerId = searchParams.get('id');
+
+    if (workerId) {
+      const foundWorker = allWorkers.find(w => w.id === workerId);
+      if (foundWorker) {
+        setWorkerData(prev => ({
+          ...prev,
+          id: foundWorker.id,
+          name: foundWorker.name,
+          phone: foundWorker.phone,
+          status: foundWorker.status,
+          rating: foundWorker.rating,
+          skills: [foundWorker.skill],
+          email: `${foundWorker.name.toLowerCase().replace(' ', '.')}@housework.com`,
+        }));
+      }
+    }
+  }, []);
 
   const earningsHistory = [
     { id: 'JOB-882', date: 'May 16, 2026', service: 'Deep Cleaning', amount: '€85.00', status: 'Paid' },

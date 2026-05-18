@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Sidebar from '../../../components/Sidebar';
+import { useRouter } from 'next/navigation';
 
 const timeOptions12h = [
   "12:00 AM", "12:30 AM", "01:00 AM", "01:30 AM", "02:00 AM", "02:30 AM",
@@ -24,6 +25,7 @@ const format12Hour = (time24) => {
 };
 
 export default function WorkersPage() {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -306,7 +308,7 @@ export default function WorkersPage() {
                         {openDropdownId === worker.id && (
                           <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-xl z-20 py-1 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150 text-left">
                             <button
-                              onClick={() => { setSelectedWorker(worker); setIsViewModalOpen(true); setOpenDropdownId(null); }}
+                              onClick={() => { setOpenDropdownId(null); router.push(`/screen/workers/profile?id=${worker.id}`); }}
                               className="w-full text-left px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
                             >
                               <div className="w-1.5 h-1.5 rounded-full bg-yellow-500"></div>
