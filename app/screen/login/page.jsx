@@ -10,7 +10,7 @@ export default function LoginPage() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    router.push('/dashboard');
+    router.push('/screen/dashboard');
   };
 
   useEffect(() => {
