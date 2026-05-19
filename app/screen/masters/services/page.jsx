@@ -9,7 +9,24 @@ export default function ServicesPage() {
    const [searchTerm, setSearchTerm] = useState('');
    const [currentPage, setCurrentPage] = useState(1);
    const [openDropdownId, setOpenDropdownId] = useState(null);
+   const [serviceImage, setServiceImage] = useState(null);
    const itemsPerPage = 10;
+
+   const handleImageUpload = (e) => {
+     const file = e.target.files[0];
+     if (file) {
+       const reader = new FileReader();
+       reader.onloadend = () => {
+         setServiceImage(reader.result);
+       };
+       reader.readAsDataURL(file);
+     }
+   };
+
+   const handleCloseModal = () => {
+     setIsAddModalOpen(false);
+     setServiceImage(null);
+   };
 
   // Handle click outside to close dropdown
   React.useEffect(() => {
@@ -256,7 +273,7 @@ export default function ServicesPage() {
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
               <h2 className="text-xl font-bold text-slate-800 dark:text-white font-serif">Add New Service</h2>
               <button
-                onClick={() => setIsAddModalOpen(false)}
+                onClick={handleCloseModal}
                 className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -282,21 +299,47 @@ export default function ServicesPage() {
                   </div>
                 </section>
 
-
-                {/* Settings Section */}
-                {/* <section>
-                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-800 font-serif">Settings</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Duration</label>
-                      <input type="text" placeholder="Type here (e.g. 2 hours)" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm text-slate-900 dark:text-slate-100 transition-colors" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Required Skill</label>
-                      <input type="text" placeholder="Type here" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm text-slate-900 dark:text-slate-100 transition-colors" />
-                    </div>
+                {/* Cover Image Section */}
+                <section>
+                  <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200 mb-4 pb-2 border-b border-slate-200 dark:border-slate-800 font-serif">Service Cover Image</h3>
+                  <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-900/50 hover:border-blue-500 hover:bg-blue-50/20 dark:hover:bg-blue-900/10 transition-all duration-300 relative group cursor-pointer">
+                    {serviceImage ? (
+                      <div className="relative w-full max-w-xs h-40 rounded-lg overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800 group/img">
+                        <img src={serviceImage} alt="Service preview" className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105" />
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setServiceImage(null);
+                            }}
+                            className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-full transition-transform scale-90 group-hover/img:scale-100 shadow-md cursor-pointer"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center text-center py-4">
+                        <div className="w-12 h-12 mb-3 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-500">
+                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 0-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </div>
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Drag and drop or click to upload</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">PNG, JPG, or WEBP up to 5MB</p>
+                      </div>
+                    )}
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                      onChange={handleImageUpload} 
+                    />
                   </div>
-                </section> */}
+                </section>
 
               </form>
             </div>
@@ -318,14 +361,14 @@ export default function ServicesPage() {
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <button
-                  onClick={() => setIsAddModalOpen(false)}
+                  onClick={handleCloseModal}
                   className="flex-1 sm:flex-none px-6 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm"
                 >
                   Cancel
                 </button>
                 <button
                   className="flex-1 sm:flex-none px-6 py-2.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm"
-                  onClick={() => setIsAddModalOpen(false)}
+                  onClick={handleCloseModal}
                 >
                   Save Service
                 </button>

@@ -26,6 +26,22 @@ const format12Hour = (time24) => {
 
 export default function WorkersPage() {
   const router = useRouter();
+  const [workers, setWorkers] = useState([
+    { id: 'WRK-001', name: 'Ravi Kumar', phone: '+49 151234567', skill: 'Cleaning', rating: '4.8', acceptance: '95%', rejects: 2, status: 'Active' },
+    { id: 'WRK-002', name: 'Asha Verma', phone: '+49 161245678', skill: 'Plumbing', rating: '4.6', acceptance: '91%', rejects: 1, status: 'Inactive' },
+    { id: 'WRK-003', name: 'Priya Sharma', phone: '+49 171356789', skill: 'Electrical', rating: '4.9', acceptance: '97%', rejects: 0, status: 'Active' },
+    { id: 'WRK-004', name: 'Amit Patel', phone: '+49 151987654', skill: 'Carpentry', rating: '4.7', acceptance: '93%', rejects: 2, status: 'Active' },
+    { id: 'WRK-005', name: 'Deepa Singh', phone: '+49 162345678', skill: 'Painting', rating: '4.5', acceptance: '89%', rejects: 3, status: 'Inactive' },
+    { id: 'WRK-006', name: 'Rajesh Gupta', phone: '+49 171456789', skill: 'HVAC', rating: '4.8', acceptance: '96%', rejects: 1, status: 'Active' },
+    { id: 'WRK-007', name: 'Meera Reddy', phone: '+49 151678901', skill: 'Landscaping', rating: '4.6', acceptance: '92%', rejects: 2, status: 'Active' },
+    { id: 'WRK-008', name: 'Vikram Nair', phone: '+49 162567890', skill: 'General Maintenance', rating: '4.4', acceptance: '87%', rejects: 4, status: 'Inactive' },
+    { id: 'WRK-009', name: 'Sunita Desai', phone: '+49 171789012', skill: 'Cleaning', rating: '5.0', acceptance: '98%', rejects: 0, status: 'Active' },
+    { id: 'WRK-010', name: 'Karan Mehta', phone: '+49 151890123', skill: 'Plumbing', rating: '4.3', acceptance: '86%', rejects: 5, status: 'Active' },
+    { id: 'WRK-011', name: 'Anjali Iyer', phone: '+49 162901234', skill: 'Electrical', rating: '4.7', acceptance: '94%', rejects: 1, status: 'Active' },
+    { id: 'WRK-012', name: 'Sanjay Joshi', phone: '+49 171012345', skill: 'Carpentry', rating: '4.2', acceptance: '85%', rejects: 3, status: 'Inactive' },
+    { id: 'WRK-013', name: 'Lakshmi Rao', phone: '+49 151123456', skill: 'Painting', rating: '4.9', acceptance: '96%', rejects: 1, status: 'Active' },
+    { id: 'WRK-014', name: 'Arjun Bose', phone: '+49 162234567', skill: 'HVAC', rating: '4.6', acceptance: '90%', rejects: 2, status: 'Inactive' },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBlockModalOpen, setIsBlockModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -35,6 +51,20 @@ export default function WorkersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [openDropdownId, setOpenDropdownId] = useState(null);
   const itemsPerPage = 10;
+
+  const toggleWorkerStatus = (workerId) => {
+    setWorkers(prev => prev.map(w => {
+      if (w.id === workerId) {
+        const nextStatus = w.status === 'Active' ? 'Inactive' : 'Active';
+        const updated = { ...w, status: nextStatus };
+        if (selectedWorker && selectedWorker.id === workerId) {
+          setSelectedWorker(updated);
+        }
+        return updated;
+      }
+      return w;
+    }));
+  };
 
   // Multi-select States
   const [selectedSkills, setSelectedSkills] = useState([]);
@@ -117,13 +147,13 @@ export default function WorkersPage() {
 
   const getStatusBadgeStyle = (status) => {
     switch (status) {
-      case 'Online': return 'text-slate-900 dark:text-white font-semibold';
+      case 'Active': return 'text-slate-900 dark:text-white font-semibold';
       default: return 'text-slate-500 font-medium';
     }
   };
 
   // Pagination Logic
-  const filteredWorkers = allWorkers.filter(worker => {
+  const filteredWorkers = workers.filter(worker => {
     const matchesSearch = worker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       worker.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       worker.skill.toLowerCase().includes(searchTerm.toLowerCase());
@@ -218,8 +248,8 @@ export default function WorkersPage() {
                   className="appearance-none bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg shadow-sm pl-4 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer min-w-[140px]"
                 >
                   <option value="">All Status</option>
-                  <option value="Online">Online</option>
-                  <option value="Offline">Offline</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -285,9 +315,22 @@ export default function WorkersPage() {
                       <td className="py-3 px-4 text-center text-slate-500 dark:text-slate-400 font-medium">{worker.acceptance}</td>
                       <td className="py-3 px-4 text-center font-medium">{worker.rejects}</td>
                       <td className="py-3 px-4">
-                        <div className="flex items-center justify-center gap-1.5">
-                          <div className={`w-1.5 h-1.5 rounded-full ${worker.status === 'Online' ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
-                          <span className={`text-[10px] uppercase tracking-wider ${getStatusBadgeStyle(worker.status)}`}>
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => toggleWorkerStatus(worker.id)}
+                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none cursor-pointer ${
+                              worker.status === 'Active' ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'
+                            }`}
+                          >
+                            <span
+                              className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                                worker.status === 'Active' ? 'translate-x-5' : 'translate-x-1'
+                              }`}
+                            />
+                          </button>
+                          <span className={`text-xs font-semibold select-none min-w-[50px] text-left ${
+                            worker.status === 'Active' ? 'text-black dark:text-white font-bold' : 'text-slate-500 dark:text-slate-400 font-medium'
+                          }`}>
                             {worker.status}
                           </span>
                         </div>
@@ -733,7 +776,7 @@ export default function WorkersPage() {
                         Approved
                       </span>
                     </div>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">Worker ID: {selectedWorker?.id} • <span className={`font-bold ${selectedWorker?.status === 'Online' ? 'text-emerald-500' : 'text-slate-400'}`}>{selectedWorker?.status}</span></p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">Worker ID: {selectedWorker?.id} • <span className={`font-bold ${selectedWorker?.status === 'Active' ? 'text-emerald-500' : 'text-slate-400'}`}>{selectedWorker?.status}</span></p>
                   </div>
                 </div>
                 <button onClick={() => setIsViewModalOpen(false)} className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-full transition-colors">
