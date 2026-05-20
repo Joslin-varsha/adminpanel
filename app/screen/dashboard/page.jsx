@@ -6,6 +6,7 @@ import Sidebar from '../../../components/Sidebar';
 
 export default function DashboardPage() {
   const [unassignedCount, setUnassignedCount] = React.useState(12);
+  const [currentSlide, setCurrentSlide] = React.useState(0);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -106,7 +107,7 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Worker Ratings */}
-                <div className="bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 border border-sky-100 dark:border-sky-800/50 rounded-xl p-4 h-48 flex flex-col items-center justify-center relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+                <Link href="/screen/dashboard/reviews" className="block bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 border border-sky-100 dark:border-sky-800/50 rounded-xl p-4 h-48 flex flex-col items-center justify-center relative overflow-hidden group hover:shadow-lg hover:border-sky-300 dark:hover:border-sky-700 transition-all duration-300">
                   <div className="absolute inset-0 bg-white/40 dark:bg-slate-900/40 backdrop-blur-[2px]"></div>
                   <div className="relative z-10 flex flex-col items-center">
                     <div className="flex space-x-1 mb-4">
@@ -118,7 +119,7 @@ export default function DashboardPage() {
                     </div>
                     <h3 className="text-sm font-bold text-sky-900 dark:text-sky-300 tracking-wider text-center">WORKER<br/>RATINGS</h3>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -169,8 +170,128 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+
+          {/* What Our Customers Say - Sliding Testimonial Carousel */}
+          <div className="mt-8 bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-lg font-bold text-slate-800 dark:text-white tracking-tight">What Our Customers Say</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Direct feedback and testimonials from our homeowners</p>
+              </div>
+              
+              {/* Carousel Control Buttons */}
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setCurrentSlide(prev => Math.max(0, prev - 1))}
+                  disabled={currentSlide === 0}
+                  className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+                  aria-label="Previous reviews"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setCurrentSlide(prev => Math.min(2, prev + 1))}
+                  disabled={currentSlide >= 2}
+                  className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors"
+                  aria-label="Next reviews"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Sliding Cards Area */}
+            <div className="overflow-hidden relative w-full rounded-xl">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out gap-4" 
+                style={{ transform: `translateX(calc(-${currentSlide * 100}% - ${currentSlide * 16}px))` }}
+              >
+                {[
+                  {
+                    name: 'Rahul Sharma',
+                    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+                    rating: 5,
+                    quote: '"Very professional and on-time service. Highly recommended!"',
+                    date: 'May 18, 2026'
+                  },
+                  {
+                    name: 'Priya Mehta',
+                    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
+                    rating: 5,
+                    quote: '"Great experience! The team was very helpful!"',
+                    date: 'May 15, 2026'
+                  },
+                  {
+                    name: 'Sarah Johnson',
+                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80',
+                    rating: 5,
+                    quote: '"Amazing deep cleaning. Reached exactly on schedule."',
+                    date: 'May 12, 2026'
+                  },
+                  {
+                    name: 'Michael Chen',
+                    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+                    rating: 4,
+                    quote: '"Satisfactory plumbing service, fixed the leakage instantly."',
+                    date: 'May 10, 2026'
+                  }
+                ].map((rev, index) => (
+                  <div key={index} className="w-full md:w-[calc(50%-8px)] flex-shrink-0">
+                    <div className="bg-slate-50 dark:bg-slate-900/40 rounded-xl p-5 border border-slate-100 dark:border-slate-800/80 hover:border-blue-500/20 dark:hover:border-blue-500/20 hover:shadow-md transition-all duration-300 flex flex-col justify-between h-44">
+                      <div>
+                        {/* Header: Avatar left, Stars right */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <img src={rev.avatar} alt={rev.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-slate-200 dark:ring-slate-800 shadow-sm" />
+                            <div className="flex flex-col">
+                              <span className="text-xs text-slate-400 dark:text-slate-500 font-medium">Verified Client</span>
+                            </div>
+                          </div>
+                          <div className="flex space-x-0.5">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <svg key={i} className={`w-4 h-4 ${i < rev.rating ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700'}`} fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Quote Text */}
+                        <p className="text-slate-600 dark:text-slate-350 italic text-xs leading-relaxed line-clamp-3 pl-1 border-l-2 border-slate-200 dark:border-slate-800">
+                          {rev.quote}
+                        </p>
+                      </div>
+                      
+                      {/* Customer name and Date at bottom */}
+                      <div className="flex justify-between items-center mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/60">
+                        <span className="text-[11px] text-slate-700 dark:text-slate-300 font-bold">{rev.name}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">{rev.date}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Navigation Dots */}
+            <div className="flex justify-center space-x-1.5 mt-5">
+              {[0, 1, 2].map((i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentSlide(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${currentSlide === i ? 'w-6 bg-blue-600' : 'w-1.5 bg-slate-200 dark:bg-slate-800'}`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </main>
     </div>
   );
 }
+
